@@ -21,7 +21,7 @@ command = ["herdr", "plugin", "pane", "open",
            "--plugin", "nilm987521.herdr-load-worktree", "--entrypoint", "run"]
 
 [[keys.command]]
-key = "prefix+alt+w"
+key = "prefix+t"
 type = "plugin_action"
 command = "nilm987521.herdr-load-worktree.open-all"
 description = "open all worktrees"

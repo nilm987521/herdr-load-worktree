@@ -25,7 +25,7 @@ herdr server reload-config
 
 ## 使用
 
-- 快捷鍵：`prefix+alt+w`（預設 prefix 為 `ctrl+b`）
+- 快捷鍵：`prefix+t`（預設 prefix 為 `ctrl+b`）
 - 或手動觸發 action：
   ```bash
   herdr plugin action invoke nilm987521.herdr-load-worktree.open-all

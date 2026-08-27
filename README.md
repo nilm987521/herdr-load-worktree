@@ -13,19 +13,37 @@ Herdr plugin：把目前 repo 底下已存在、但尚未在 herdr 開成 worksp
 
 ## 安裝
 
+本機開發用 `link`：
+
 ```bash
 herdr plugin link /Users/daniel/Documents/Personal/herdr-load-worktree
 ```
 
-修改腳本或 manifest 後不需要重新 link，重新觸發 action 即可套用；若改到 keybinding 綁定，執行：
+或直接從 GitHub 安裝：
 
 ```bash
-herdr server reload-config
+herdr plugin install nilm987521/herdr-load-worktree --yes
 ```
+
+修改腳本或 manifest 後不需要重新 link；`install` 來源則需重新執行 `herdr plugin install` 才會抓到最新 commit。
+
+### 快捷鍵
+
+`herdr-plugin.toml` 裡雖然宣告了 `[[keys.command]]`，但目前實測（herdr 0.8.2）**plugin manifest 裡的 keybinding 不會被載入進實際按鍵表**，按下去沒反應。要讓快捷鍵生效，請把同樣內容手動加進 `~/.config/herdr/config.toml`：
+
+```toml
+[[keys.command]]
+key         = "prefix+t"
+type        = "plugin_action"
+command     = "nilm987521.herdr-load-worktree.open-all"
+description = "open all worktrees"
+```
+
+改完執行 `herdr server reload-config`，再按 `prefix+?` 確認 `open-all` 出現在 `custom` 清單裡即可。
 
 ## 使用
 
-- 快捷鍵：`prefix+t`（預設 prefix 為 `ctrl+b`）
+- 快捷鍵：`prefix+t`（見上方「快捷鍵」章節設定；預設 prefix 為 `ctrl+b`）
 - 或手動觸發 action：
   ```bash
   herdr plugin action invoke nilm987521.herdr-load-worktree.open-all

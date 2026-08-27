@@ -20,6 +20,9 @@ contexts = ["workspace"]
 command = ["herdr", "plugin", "pane", "open",
            "--plugin", "nilm987521.herdr-load-worktree", "--entrypoint", "run"]
 
+# 注意：目前 herdr（測試於 0.8.2）不會把 plugin manifest 裡的 [[keys.command]]
+# 合併進實際按鍵表，這段僅供參考。要讓快捷鍵生效，請照 README「安裝」章節
+# 直接把同樣內容加進 ~/.config/herdr/config.toml。
 [[keys.command]]
 key = "prefix+t"
 type = "plugin_action"

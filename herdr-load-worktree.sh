@@ -9,7 +9,8 @@ if ! command -v jq >/dev/null 2>&1; then
   exit 1
 fi
 
-cwd="$PWD"
+cwd=$(printf '%s' "${HERDR_PLUGIN_CONTEXT_JSON:-}" | jq -r '.workspace_cwd // .focused_pane_cwd // empty')
+cwd="${cwd:-$PWD}"
 worktree_json=$("$herdr" worktree list --cwd "$cwd")
 
 echo "$worktree_json" | jq -r '

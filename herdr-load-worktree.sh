@@ -9,7 +9,8 @@ if ! command -v jq >/dev/null 2>&1; then
   exit 1
 fi
 
-worktree_json=$("$herdr" worktree list --cwd "$PWD")
+cwd="$PWD"
+worktree_json=$("$herdr" worktree list --cwd "$cwd")
 
 echo "$worktree_json" | jq -r '
   .result.worktrees[]
@@ -17,7 +18,9 @@ echo "$worktree_json" | jq -r '
   | [.path, .branch] | @tsv
 ' | while IFS=$'\t' read -r path branch; do
   echo "開啟 worktree: $branch ($path)"
-  "$herdr" worktree open --path "$path" --label "$branch" --no-focus
+  if ! "$herdr" worktree open --cwd "$cwd" --path "$path" --label "$branch" --no-focus; then
+    echo "  失敗，略過" >&2
+  fi
 done
 
 echo "完成。按任意鍵關閉。"

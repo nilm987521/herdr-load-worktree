@@ -13,16 +13,25 @@ cwd=$(printf '%s' "${HERDR_PLUGIN_CONTEXT_JSON:-}" | jq -r '.workspace_cwd // .f
 cwd="${cwd:-$PWD}"
 worktree_json=$("$herdr" worktree list --cwd "$cwd")
 
-echo "$worktree_json" | jq -r '
+pending=$(echo "$worktree_json" | jq -r '
   .result.worktrees[]
   | select(.open_workspace_id == null)
   | [.path, .branch] | @tsv
-' | while IFS=$'\t' read -r path branch; do
-  echo "開啟 worktree: $branch ($path)"
-  if ! "$herdr" worktree open --cwd "$cwd" --path "$path" --label "$branch" --no-focus; then
-    echo "  失敗，略過" >&2
-  fi
-done
+')
 
-echo "完成。按任意鍵關閉。"
+if [ -z "$pending" ]; then
+  echo "沒有尚未開啟的 worktree，全部都已經開好了。"
+else
+  echo "$pending" | while IFS=$'\t' read -r path branch; do
+    printf '開啟 %-20s ... ' "$branch"
+    if "$herdr" worktree open --cwd "$cwd" --path "$path" --label "$branch" --no-focus >/dev/null; then
+      echo "完成"
+    else
+      echo "失敗"
+    fi
+  done
+fi
+
+echo
+echo "按任意鍵關閉。"
 read -r -n1 -s || true
